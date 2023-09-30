@@ -12,7 +12,6 @@ import re
 from discord.ui.item import Item
 import requests
 from scraper import wikiScraper
-import wikiChemObj
 from fonts import MyFont
 from database_test import create_fonts_table, updateMessage, fetchData, addFont, create_message_table, requestAllFonts
 
