@@ -5,63 +5,47 @@ from typing import Any, Coroutine, Optional
 import discord
 from discord.ext import commands
 from discord.interactions import Interaction
-from discord.ui import Button, View, Select
+from discord.ui import View
 import random
 import json
 import re
 from discord.ui.item import Item
 import requests
-from wikiScraper import wikiSearches, wikiSummary
-from chem_file import query_chemicals
-from scraper import wikiScrapeChem
+from scraper import wikiScraper
 import wikiChemObj
 from fonts import MyFont
 from database_test import create_fonts_table, updateMessage, fetchData, addFont, create_message_table, requestAllFonts
 
+############### API KEYS ####################################
+
 token = settings.DISCORD_API_SECRET
+wolfram_ID = settings.WOLFRAM_API_ID
+
+################## GLOBAL VARIABLES ##########################
+
+logger = settings.logging.getLogger("bot")
 description = 'a lazy bot'
 intents = discord.Intents.default()
 intents.members = True
 intents.message_content = True
 prefix = "$"
-#usr_michiyo =
-#usr_franek = 
-id_usr_michiyo = 477936801504296994
-id_usr_franek = 265900398961885184
-color_michiyo = 0xfbb3fd
-color_franek = 0xbbef88
+messageCountChannelID = 1152392328699461682
 
-WOLFRAM_API_ID = "E27UE8-72Y46YAU4H"
+#################################### BOT SETUP ##############################################
 
-######################################################################################################
-
-bot = commands.Bot(command_prefix=prefix, description="Michiyo is a smol neko", intents=intents)
+bot = commands.Bot(command_prefix=prefix, description="Michiyo is a pufferfish", intents=intents)
 
 @bot.event
 async def on_ready():
-    print(f'Logged on as {bot.user}!')
-    print('---------------------')
+    logger.info(f"Logged on as User: {bot.user} (ID: {bot.user.id})")
     await bot.tree.sync()
 
     create_fonts_table()
     create_message_table()
-  #  [MyFont.add_local_font(row) for row in requestAllFonts()]
 
-    rows = requestAllFonts()
-    for row in rows:
-        message = MyFont.add_local_font(row)
-        print(message)
-
-    
+    [MyFont.add_local_font(row) for row in requestAllFonts()]
+            
 ############################# CUSTOM CLASSES #########################################################
-
-# class MyButton(Button):
-#     def __init__(self, label):
-#         super().__init__(label=label, style=discord.ButtonStyle.green)
-
-#     async def callback(self, interaction):
-#         await interaction.edit_original_response(content='Stiny Totle', view=None)
-#         await interaction.response.send_message("hi!!!!")
 
 class MyButtonView(View):
 
@@ -95,6 +79,7 @@ class MyButtonView(View):
     async def on_error(self, interaction, error, item) -> None:
         await interaction.response.send_message(str(error))
 
+##################################################################
 
 class MySelectView(discord.ui.View):
     def __init__(self, ctx):
@@ -112,7 +97,7 @@ class MySelectView(discord.ui.View):
     )
     async def select_callback(self, interaction: discord.Interaction, select: discord.ui.Select):
         selected_option = select.values[0]
-        summary = wikiSummary(selected_option)
+        summary = wikiScraper.wikiSummary(selected_option)
         self.sel_opt = selected_option
         self.summary = summary
 
@@ -130,73 +115,11 @@ class MySelectView(discord.ui.View):
             self.clear_items()
 
 
-        # discord.SelectOption(label="Select!", emoji="🥵"),
-        # discord.SelectOption(label="Dont select...", emoji="😖")
-        # if select.values[0] == 'Select!':
-        #     await interaction.response.send_message("good kitten 🐈")
-        # else:
-        #     await interaction.response.send_message("you're a dumb bitch 🙄")
-
-
-def mergeData(myList):
-    newList=[]
-    print("mergeData initiated!!!")
-    wikiList = wikiScrapeChem(myList)
-    chemList = query_chemicals(myList)
-    print("=============== WIKI LIST ===================")
-    for x in wikiList:
-        print(x.content)
-        print(x.error)
-        print(x.molar_mass)
-    print("=============  CHEM LIST  ======================")
-    for x in chemList:
-        print(x.content)
-        print(x.error)
-        print(x.molar_mass)
-    print("=======================================")
-
-    for idx, chemical in enumerate(wikiList):
-
-        melt = None
-        boil = None
-        boil = wikiList[idx].boiling_point if (wikiList[idx].boiling_point is not None) else chemList[idx].boiling_point
-        melt = wikiList[idx].melting_point if (wikiList[idx].melting_point is not None) else chemList[idx].melting_point
-        MolMass = chemList[idx].molar_mass if (chemList[idx].error != "Error") else chemical.molar_mass
-            
-
-        newObj = wikiChemObj.wikiChemObj(
-            name=wikiList[idx].name,
-            content=None,
-            error=chemList[idx].error,
-            url=wikiList[idx].url,
-
-            molar_mass = str(MolMass),
-            melting_point=melt,
-            boiling_point=boil,
-            density=wikiList[idx].density,
-            colour=wikiList[idx].colour,
-            formula=wikiList[idx].formula,
-            solubility=wikiList[idx].solubility,
-            sol_in_water=wikiList[idx].sol_in_water
-        )
-        newObj.content = newObj.ObjToString()
-
-        newList.append(newObj)
-    return newList
-        
-
-
 ######################### BOT COMMANDS AND FUNCTIONS ##################################################
 
-@bot.command(name='ping')
+@bot.hybrid_command(name='ping')
 async def ping(ctx):
     await ctx.send("pong 👀🧃 ") 
-
-# @bot.command(name='save')
-# async def save(ctx):
-#     message = await ctx.channel.fetch_message(ctx.message.reference.message_id)
-#     add_to_txt(message)
-#     await ctx.send("""added the message:\n" {msg} "\nto the txt file 👀🧃""".format(msg = message.content))
 
 @bot.command(name='button')
 async def button(ctx):
@@ -211,7 +134,7 @@ async def selection(ctx):
 
 @bot.command(name='viewSaved')
 async def viewSaved(ctx):
-    count_channel = bot.get_channel(1152392328699461682)
+    count_channel = bot.get_channel(messageCountChannelID)
     rows = fetchData()
 
     # Create an empty embed
@@ -293,7 +216,7 @@ async def save(ctx):
 @bot.command(name='wiki')
 async def wiki(ctx, *args):
     query = ' '.join(args)
-    results = wikiSearches(query)
+    results = wikiScraper.wikiSearches(query)
     if not results:
             await ctx.send("What are you on about u dummy? 😤")
             return
@@ -312,44 +235,46 @@ async def wiki(ctx, *args):
 @bot.command(name='chemicals')
 async def chemicals(ctx, *args):
     #await ctx.send("Type in chemicals as command arguments separated by whitespace 👩‍🔬")
-    chem_list_to_display = query_chemicals(args)
+    chem_list_to_display = wikiScraper.chemicalsSearchResults(chemicals_list=args)
     usr = ctx.message.author
 
     for chemical in chem_list_to_display:
-        embed=discord.Embed(title=chemical.name, description=chemical.content, color=usr.accent_color)
+        embed=discord.Embed(title=chemical.query, description=chemical.content, color=usr.accent_color)
         await ctx.send(embed=embed)
 
 @bot.command(name='chem')
 async def chem(ctx, *args):
     #await ctx.send("Type in chemicals as command arguments separated by whitespace 👩‍🔬")
-    chem_list_to_display = wikiScrapeChem(args)
+    # add items for more search results :P
+
+    chem_list_to_display = wikiScraper.wikiSearchResults(args, moja_lista)
     usr = ctx.message.author
 
     for chemical in chem_list_to_display:
-        print("\n"+chemical.url + "\n")
-        embed=discord.Embed(title=chemical.name, description=chemical.content, color=usr.accent_color, url=chemical.url)
+        embed=discord.Embed(title=chemical.query, description=chemical.content, color=usr.accent_color, url=chemical.url)
         await ctx.send(embed=embed)
 
 @bot.command(name='toggle')
 async def toggle(ctx, *args):
     a=3
     
-@bot.command(name='chemData')
+@bot.command(name='chemData')   
 async def chemData(ctx, *args):
     #await ctx.send("Type in chemicals as command arguments separated by whitespace 👩‍🔬")
-    chem_list_to_display = mergeData(args)
-    usr = ctx.message.author
 
-    field_embed = False
+    chem_list_to_display = wikiScraper.combinedSearchResults(chemicals_list=args, interested_list=moja_lista)
+    
+    usr = ctx.message.author
+    field_embed = True
 
     for chemical in chem_list_to_display:
-        dictt = chemical.ObjToDict()
         if(field_embed):
-            embed=discord.Embed(title=chemical.name, description="", color=usr.accent_color, url=chemical.url)
+            dictt = chemical.result_dict
+            embed=discord.Embed(title=chemical.query, description="", color=usr.accent_color, url=chemical.url)
             for key, value in dictt.items():
                 embed.add_field(name=key, value=value, inline=False)
         else:
-            embed=discord.Embed(title=chemical.name, description=chemical.content, color=usr.accent_color, url=chemical.url)
+            embed=discord.Embed(title=chemical.query, description=chemical.content, color=usr.accent_color, url=chemical.url)
         await ctx.send(embed=embed)
 
 
@@ -358,7 +283,7 @@ async def chemData(ctx, *args):
 @bot.command(name='wolfram')
 async def wolfram(ctx, *args):
     query = '+'.join(args)
-    url = f"https://api.wolframalpha.com/v1/conversation.jsp?appid={WOLFRAM_API_ID}&i={query}%3f"
+    url = f"https://api.wolframalpha.com/v1/conversation.jsp?appid={wolfram_ID}&i={query}%3f"
     response = requests.get(url)
     usr = ctx.message.author
     
@@ -427,21 +352,18 @@ swear_words = [
     "asian", "white", "black", "nigger", "nigga", "racist"
 ]
 
-count_list = ["bb", "cow", "asian", "white", "tortle", "neko"]
+count_list = ["bb", "cow", "asian", "white", "tortle", "neko", "racist",
+              "tummy", "pee"]
 
 def add_word_to_count(new_word):
     count_word = {
-        "word": "{word}".format(word = new_word),
+        "word": new_word,
         "count": 0
     }
     json_obj = json.dump(count_word, indent=4)
     file = open("word_count.txt", "a")
     file.write(json_obj)
     file.close()
-
-# def word_count_check(message):
-#     msg = message.content
-#     return any(ele in msg for ele in count_words)
 
 def swear_word(message):
     msg = message.content
@@ -487,7 +409,12 @@ Server Administration (and Tortle)
 #     "tiny":"ᴀʙᴄᴅᴇꜰɢʜɪᴊᴋʟᴍɴᴏᴘʀꜱᴛᴜᴡᴠxʏᴢ"
 # }
 
+moja_lista = [
+    'Chemical formula', 'Molar mass', 'Appearance', 'Density', 
+    'Melting point', 'Boiling point', 'Solubility', 'Solubility in water'
+    ]
+
 
 #################################################################
 
-bot.run(token)
+bot.run(token, root_logger=True)
