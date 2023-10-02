@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import requests
 import wikipedia
 from chemicals import CAS_from_any, MW, Tb, Tm
-import wikiChemObj
+import test_files.wikiChemObj as wikiChemObj
 from dataMerger import dataMerger
 
 # michiyo_wants_these_chemicals = input("What chemicals u want? Input separated by comma:\n")
@@ -22,6 +22,7 @@ class wikiScraper:
         
     @classmethod
     def wikiSearches(self, query):
+        # returns a list of matching wikipedia articles from the input query
         try:
             results = wikipedia.search(query)
             return results
