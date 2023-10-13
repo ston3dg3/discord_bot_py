@@ -28,6 +28,13 @@ def create_fonts_table(cur):
                   name TEXT PRIMARY KEY,
                   alphabet INT
                 )''')
+    
+@sqlConn
+def create_sudoku_table(cur):
+    cur.execute('''CREATE TABLE IF NOT EXISTS saved_sudoku (
+                  id TEXT PRIMARY KEY,
+                  board INT
+                )''')
 
     
 ################## TABLE DELETERS ############################
@@ -70,6 +77,21 @@ def addFont(cur, font_name, alphabet):
         # If the font is in the database, return error message
         error_message = "Such font name already exists. Check the font command for details"
         return error_message
+    
+
+@sqlConn
+def updateSudoku(cur, serial_sudoku, sudoku_ID):
+    # Check if the sudoku ID is in the database
+    cur.execute('SELECT * FROM saved_sudoku WHERE id = ?', (sudoku_ID,))
+    row = cur.fetchone()
+
+    if row is None:
+        # If the sudoku is not in the database, insert it with value serialized
+        cur.execute('INSERT INTO saved_sudoku (id, board) VALUES (?, ?)', (sudoku_ID,serial_sudoku))
+    else:
+        # If sudoku is in the database, update it
+        cur.execute('UPDATE saved_sudoku SET board = ? WHERE id = ?', (serial_sudoku, sudoku_ID))
+
 
 
 ######################## TABLE FETCH REQUESTS #########################
@@ -89,6 +111,12 @@ def fetchData(cur):
 @sqlConn
 def requestAllFonts(cur):
     cur.execute('SELECT * FROM saved_fonts')
+    rows = cur.fetchall()
+    return rows
+
+@sqlConn
+def fetchSudoku(cur):
+    cur.execute('SELECT * FROM saved_sudoku')
     rows = cur.fetchall()
     return rows
 

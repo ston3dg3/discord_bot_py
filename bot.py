@@ -2,16 +2,18 @@ import discord
 import settings
 import random
 import json
+import utilities
+import pickle
 from discord.ext import commands
 from API_requests import requestHandler
 from customUI import MyButtonView, MySelectView
 from bot_setup import bot_parameters
-from utility_func import utilities
 from scraper import wikiScraper
 from fonts import MyFont
 from embed_manager import ListEmbed, TableEmbed
-from database_test import fetchData, addFont
+from database_test import fetchData, addFont, fetchSudoku
 from bot_prepare import initialize
+from sudoku import Sudoku
 
 ################## GLOBAL VARIABLES ##########################
 
@@ -119,6 +121,67 @@ async def save(ctx):
     embed.set_author(name=usr.display_name, icon_url=usr.display_avatar)
     await saved_channel.send(embed=embed)
 
+
+@bot.command(name='sudoku')
+async def sudoku(ctx, size=3, difficulty=75):
+    size = int(size)
+    difficulty = int(difficulty)
+    size = utilities.clamp(size, 2, 10)
+    sdk = Sudoku(size, difficulty)
+
+    stringer = sdk.prettyPrint()
+    newstr = "```\n"+stringer+"\n```"
+    embed=discord.Embed(title=f"Sudoku size: {sdk.side}x{sdk.side} Difficulty: {sdk.difficulty}", description=newstr, color=0x42f56f)
+    await ctx.send(embed=embed)
+
+
+@bot.command(name='sudokus')
+async def sudokus(ctx):
+    count_channel = bot.get_channel(bot_parameters.messageCountChannelID)
+
+    # generate dict for ListEmbed:
+    dicto = {}
+    if len(Sudoku.sudoku_list) == 0:
+        await count_channel.send("There are no saved sudoku baords :sadcute:")
+        return
+    i = 1
+    for sdk in Sudoku.sudoku_list:
+        if sdk:
+            newstr = "```\n"+sdk.prettyPrint()+"\n```"
+            line_name = f"{i}) Sudoku size: {sdk.side}x{sdk.side} Difficulty: {sdk.difficulty}"
+            dicto.update({line_name : newstr})
+            i = i+1
+        else:
+            pass
+    
+    embed = ListEmbed(ctx, "Saved Sudoku Boards", dicto, color = 0xffd152)
+    if len(dicto) != 0:
+        await count_channel.send(embed=embed)
+    else:
+        await count_channel.send("There are no saved sudoku baords :sadcute:")
+
+class insertFlags(commands.FlagConverter):
+    group: int = commands.flag(description='The group number (1-9)')
+    square: int = commands.flag(description='The square number (1-9)')
+    num: int = commands.flag(description='The number you want to place')
+    sdk_choice: int = commands.flag(default=0, description='Which sudoku? Default is last modified')
+
+
+@bot.hybrid_command(name='insert')
+async def insert(ctx, *, flags: insertFlags):
+    flags.sdk_choice = utilities.clamp(flags.sdk_choice, 0, len(Sudoku.sudoku_list))
+    flags.sdk_choice = flags.sdk_choice - 1
+    try:
+        # TODO: create a way to choose which sudoku u want to edit
+        sdk = Sudoku.sudoku_list[flags.sdk_choice] 
+        sdk.inputNum(flags.group,flags.square,flags.num)
+
+        stringer = sdk.prettyPrint()
+        newstr = "```\n"+stringer+"\n```"
+        embed=discord.Embed(title=f"Sudoku size: {sdk.side}x{sdk.side} Difficulty: {sdk.difficulty}", description=newstr, color=0x42f56f)
+        await ctx.send(embed=embed)
+    except IndexError as err:
+        await ctx.send(err)
 
 @bot.command(name='wiki')
 async def wiki(ctx, *args):

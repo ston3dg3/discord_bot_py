@@ -3,7 +3,37 @@
 
 from typing import Any
 from discord import Intents
+from utilities import tryDict
+import json
 
+with open('bot_settings.json') as json_file:
+    data = json.load(json_file)
+
+    global messageCountChannelID
+    global savedMessageChannelID
+    channelID = tryDict(data, "channelID")
+    messageCountChannelID = tryDict(channelID, "messageCountChannelID")
+    savedMessageChannelID = tryDict(channelID, "savedMessageChannelID")
+
+    global bot_prefix
+    global bot_description
+    botParams = tryDict(data, "botParams")
+    bot_prefix = tryDict(botParams, "bot_prefix")
+    bot_description = tryDict(botParams, "bot_description")
+
+    global swear_words
+    global count_list
+    global chem_attributes_list
+    lists = tryDict(data, "lists")
+    swear_words = tryDict(lists, "swear_words")
+    count_list = tryDict(lists, "count_list")
+    chem_attributes_list = tryDict(lists, "chem_attributes_list")
+
+    global swear_notice1
+    global swear_notice2
+    longStrings = tryDict(data, "longStrings")
+    swear_notice1 = tryDict(longStrings, "swear_notice1")
+    swear_notice2 = tryDict(longStrings, "swear_notice2")
 
 class bot_parameters:
 
@@ -13,6 +43,8 @@ class bot_parameters:
         bot_intents.members = True
         bot_intents.message_content = True
         return bot_intents
+    
+    
 
     messageCountChannelID = 1152392328699461682
     
@@ -34,7 +66,7 @@ class bot_parameters:
     swear_notice1 = "Hi Franek dont be racist bc michiyo will get mad at u"
 
     swear_notice2 = """
-        Dear {name},
+        Dear Discord User,
         I hope this message finds you well. We appreciate your presence on our Discord server and value your contributions to our community. However, we've noticed that there have been instances of swearing in your recent messages.
         Our server is committed to providing a welcoming and respectful environment for all members, and as such, we have a policy against the use of explicit language. We kindly request that you refrain from swearing in the future to maintain the positive atmosphere we strive to create.
         We understand that slips can happen, but repeated violations may lead to more serious actions, such as a temporary mute or, in extreme cases, removal from the server. We sincerely hope it doesn't come to that and would prefer to continue enjoying your presence here.
