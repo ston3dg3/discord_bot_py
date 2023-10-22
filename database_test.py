@@ -1,11 +1,11 @@
 import sqlite3
-from bot_setup import workingDirPath
+from envReplacement import working_path
 import exceptions
 
 
 def sqlConn(func):
     def wrapper(*args, **kwargs):
-        con = sqlite3.Connection(workingDirPath+"/example.db")
+        con = sqlite3.Connection(working_path+"/example.db")
         cur = con.cursor()
         result = func(cur, *args, **kwargs)
         con.commit()
@@ -46,6 +46,12 @@ def create_sudoku_table(cur):
 def clear_table(cur):
     # delete the whole table for testing
     cur.execute(""" DELETE FROM saved_mgs """)
+
+
+@sqlConn
+def deleteNoneTypes(cur):
+    # delete all rows from the table that are of type None
+    cur.execute(""" DELETE FROM saved_mgs WHERE message IS NULL """)
 
 
 ####################### TABLE UPDATES ############################
@@ -130,3 +136,5 @@ def fetchSudoku(cur):
 
 
 #######################################################################
+
+# deleteNoneTypes()

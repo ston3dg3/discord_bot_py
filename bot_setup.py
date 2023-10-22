@@ -5,10 +5,10 @@ from typing import Any
 from discord import Intents
 from utilities import tryDict
 import json
+from envReplacement import working_path
 
-workingDirPath = "."
 
-with open(workingDirPath+"/bot_settings.json") as json_file:
+with open(working_path+"/bot_settings.json") as json_file:
     data = json.load(json_file)
 
     global messageCountChannelID

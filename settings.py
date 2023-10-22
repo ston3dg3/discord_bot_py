@@ -2,11 +2,17 @@ from dotenv import load_dotenv
 import os
 import logging
 from logging.config import dictConfig
+import envReplacement
 
 load_dotenv()
 
-DISCORD_API_SECRET = os.getenv("DISCORD_API_TOKEN")
-WOLFRAM_API_ID = os.getenv("WOLFRAM_API_ID")
+if(envReplacement.useEnv):
+    DISCORD_API_SECRET = os.getenv("DISCORD_API_TOKEN")
+    WOLFRAM_API_ID = os.getenv("WOLFRAM_API_ID")
+else:
+    DISCORD_API_SECRET = envReplacement.discrod_api
+    WOLFRAM_API_ID = envReplacement.wolfram_api
+
 
 LOGGING_CONFIG = {
     "version": 1,

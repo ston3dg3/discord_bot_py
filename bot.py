@@ -291,7 +291,7 @@ async def clear(ctx, number=1):
 async def on_message(message):
     if message.author!=bot.user:
         found_word = utilities.count_word(message, bot_setup.count_list)
-        updateMessage(found_word)
+        if not found_word is None: updateMessage(found_word)
         if utilities.swear_word(message):
             print("we got a swear word!!")
             # TODO: swear words response
