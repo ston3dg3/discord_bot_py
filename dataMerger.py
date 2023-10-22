@@ -60,38 +60,3 @@ class dataMerger:
                 merged_dict[key] = value
 
         return merged_dict
-
-
-
-
-
-################ TESTING ZONE ##########################################
-
-# class testObject():
-#     def __init__(self, name=None, age=None, colour=None, error=None, test=None) -> None:
-#         self.name = name
-#         self.age = age
-#         self.colour = colour
-#         self.error = error
-#         self.test = test
-    
-#     def __str__(self) -> str:
-#         return f"""testObject:
-#             name: {self.name}
-#             age: {self.age}
-#             colour: {self.colour}
-#             error: {self.error}
-#             test: {self.test}
-# """
-
-# data1 = [testObject(age=22, colour=0xadf542, error="No Error", test="test"), 
-#          testObject(name="Tom", error="No Error")]
-
-# data2 = [testObject(name="Sarah", age=22, error="Error"),
-#          testObject(test="YAYY") ]
-
-
-# merged = mergeData(testObject, data1=data1, data2=data2, dataVariables=["name", "age", "colour"], default_ND="N/D")
-# [print(x) for x in merged]
-
-########################################################################

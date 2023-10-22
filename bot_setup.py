@@ -6,7 +6,9 @@ from discord import Intents
 from utilities import tryDict
 import json
 
-with open('bot_settings.json') as json_file:
+workingDirPath = "."
+
+with open(workingDirPath+"/bot_settings.json") as json_file:
     data = json.load(json_file)
 
     global messageCountChannelID
@@ -35,51 +37,11 @@ with open('bot_settings.json') as json_file:
     swear_notice1 = tryDict(longStrings, "swear_notice1")
     swear_notice2 = tryDict(longStrings, "swear_notice2")
 
-class bot_parameters:
-
-    @classmethod
-    def getIntents(self):
-        bot_intents = Intents.default()
-        bot_intents.members = True
-        bot_intents.message_content = True
-        return bot_intents
-    
-    
-
-    messageCountChannelID = 1152392328699461682
-    
-    savedMessageChannelID = 1152273521028898856
-
-    bot_prefix = "$"
-
-    bot_description = "Michiyo is a pufferfish"
-
-    swear_words = [
-        "asian", "white", "black", "nigger", "nigga", "racist"
-    ]
-
-    count_list = [
-        "bb", "cow", "asian", "white", "tortle", "neko", "racist",
-        "tummy", "pee"
-    ]
-    
-    swear_notice1 = "Hi Franek dont be racist bc michiyo will get mad at u"
-
-    swear_notice2 = """
-        Dear Discord User,
-        I hope this message finds you well. We appreciate your presence on our Discord server and value your contributions to our community. However, we've noticed that there have been instances of swearing in your recent messages.
-        Our server is committed to providing a welcoming and respectful environment for all members, and as such, we have a policy against the use of explicit language. We kindly request that you refrain from swearing in the future to maintain the positive atmosphere we strive to create.
-        We understand that slips can happen, but repeated violations may lead to more serious actions, such as a temporary mute or, in extreme cases, removal from the server. We sincerely hope it doesn't come to that and would prefer to continue enjoying your presence here.
-        If you have any questions or concerns regarding our server rules or any other matter, please feel free to reach out to one of our moderators or administrators. They are always ready to assist you.
-        Thank you for your understanding and cooperation in this matter. Let's work together to keep our server a pleasant place for everyone.
-        Best regards,
-        Server Administration (and Tortle)
-                    """
-    
-    chem_attributes_list = [
-        'Chemical formula', 'Molar mass', 'Appearance', 'Density', 
-        'Melting point', 'Boiling point', 'Solubility', 'Solubility in water'
-    ]
+def getIntents():
+    bot_intents = Intents.default()
+    bot_intents.members = True
+    bot_intents.message_content = True
+    return bot_intents
 
 
 ############## OLD VARIABLES #####################

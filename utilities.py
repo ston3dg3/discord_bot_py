@@ -1,7 +1,6 @@
 # File containing utility functions for manipulating strings etc...
 import json
 import re
-from database_test import updateMessage
 import time
 from datetime import datetime
 
@@ -19,9 +18,9 @@ def add_word_to_count( new_word):
 
 
 def swear_word( message):
-    from bot_setup import bot_parameters
+    from bot_setup import swear_words
     msg = message.content
-    return any(ele in msg for ele in bot_parameters.swear_words)
+    return any(ele in msg for ele in swear_words)
 
 
 def count_word( message, mess_list):
@@ -29,7 +28,7 @@ def count_word( message, mess_list):
     # matching_element = next((element for element in mess_list if element in message.content), None)
     matching_element = next((element for element in mess_list if re.search(rf'\b{element}\b', message.content)), None)
     if matching_element:
-        updateMessage(matching_element)
+        return matching_element
 
 
 def add_to_txt( message):

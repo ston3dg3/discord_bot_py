@@ -19,6 +19,7 @@ programming concepts, APIs, and data storage like sqlite / text files.
  - database - local sqlite (look [database_test.py](https://github.com/ston3dg3/discord_bot_py/blob/staging/database_test.py))
  - project file organisation (look project structure)
  - use of git and github for source control (look here)
+ - serializing data for database storage (had to store python object in the local sqlite db) - using pickles python library
 
 
  ### File will be expanding in the future, stay tuned...

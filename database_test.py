@@ -1,9 +1,11 @@
 import sqlite3
+from bot_setup import workingDirPath
+import exceptions
 
 
 def sqlConn(func):
     def wrapper(*args, **kwargs):
-        con = sqlite3.Connection("example.db")
+        con = sqlite3.Connection(workingDirPath+"/example.db")
         cur = con.cursor()
         result = func(cur, *args, **kwargs)
         con.commit()
@@ -51,6 +53,8 @@ def clear_table(cur):
 
 @sqlConn
 def updateMessage(cur, msg):
+    if msg is None: raise exceptions.DatabaseNoneType
+
     # Check if the message is in the database
     cur.execute('SELECT * FROM saved_mgs WHERE message = ?', (msg,))
     row = cur.fetchone()
@@ -65,6 +69,8 @@ def updateMessage(cur, msg):
 
 @sqlConn
 def addFont(cur, font_name, alphabet):
+    if font_name is None or alphabet is None: raise exceptions.DatabaseNoneType
+    
     # Check if the message is in the database
     cur.execute('SELECT * FROM saved_fonts WHERE name = ?', (font_name,))
     row = cur.fetchone()
@@ -81,6 +87,8 @@ def addFont(cur, font_name, alphabet):
 
 @sqlConn
 def updateSudoku(cur, serial_sudoku, sudoku_ID):
+    if serial_sudoku is None or sudoku_ID is None: raise exceptions.DatabaseNoneType
+
     # Check if the sudoku ID is in the database
     cur.execute('SELECT * FROM saved_sudoku WHERE id = ?', (sudoku_ID,))
     row = cur.fetchone()
