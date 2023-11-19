@@ -1,4 +1,3 @@
-import discord
 from discord.ext import commands
 
 from embed_manager import ListEmbed
@@ -15,44 +14,43 @@ class SudokuCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-        # cmds = [
-        #     [["list"], []],
-        #     [["help"], []],
-        #     [["new"], ["name:str", "alphabet:str:26"]],
-        #     [["style"], ["name", "*message"]]
-        # ]
-
-    class sudokuFlags(commands.FlagConverter):
-        option: str = commands.flag(description="What do you want to do? [new] - Create new Sudoku. [save] - Save current sudoku. [list] - List all sudoku boards")
-        difficulty: int = commands.flag(description="Easiest: [10], Hardest: [80]. Default 70", default=70)
-        size: int = commands.flag(description="Sudoku size. Range [2-10]. Default 3", default=3)
-
-    @commands.hybrid_command(name='sudoku')
-    async def sudoku(self, *, flags: sudokuFlags):
-
+    @commands.command(name='sudoku')
+    async def sudoku(self, ctx, *args):
+        # define Sudoku channel
         sudoku_channel = bot_setup.messageCountChannel
 
-        if (flags.option == "new"):
-            await sudoku_channel.send(embed = sudoku_manager.sudokuCreate(flags.size, flags.difficulty))
-        elif (flags.option == "save"):
-            await sudoku_channel.send(embed = sudoku_manager.sudokuSave())
-        elif (flags.option == "list"):
-            await sudoku_channel.send(embed = sudoku_manager.sudokuList())            
+        cmds = [
+            [["list"], []],
+            [["help"], []],
+            [["new"], ["size:int:10", "difficulty:int:100"]],
+            [["load"], ["sudoku_index:int"]],
+            [["save"], []],
+            [["insert"], ["group:int", "square:int", "num:int"]]
+        ]
+
+        if len(args)>0:
+            parsed_args = utilities.parse(cmds, args)
+            option = args[0]
+            if (option == "list"):
+                await sudoku_manager.sudokuList(sudoku_channel)
+            elif (option == "help"):
+                await sudoku_manager.sudokuHelp(sudoku_channel)
+            elif (option == "new"):
+                await sudoku_manager.sudokuCreate(parsed_args[0], parsed_args[1], sudoku_channel)
+            elif (option == "load"):
+                await sudoku_manager.sudokuLoad(parsed_args[0], sudoku_channel)
+            elif (option == "save"):
+                await sudoku_manager.sudokuSave(sudoku_channel)
+            elif (option == "insert"):
+                await sudoku_manager.sudokuInsert(parsed_args[0], parsed_args[1], parsed_args[2], sudoku_channel)
+            else:
+                await sudoku_channel.send(f"Invalid option. Choose one of: [new] [save] [list] or type {bot_setup.bot_prefix}sudoku help")
         else:
-            await sudoku_channel.send("Invalid option. Choose one of: [new] [save] [list]")
-
-    class insertFlags(commands.FlagConverter):
-        group: int = commands.flag(description='The group number (1-9)')
-        square: int = commands.flag(description='The square number (1-9)')
-        num: int = commands.flag(description='The number you want to place')
-        sdk_choice: int = commands.flag(default=0, description='Which sudoku? Default is last modified')
+            await ctx.send("Not enough input arguments!")
 
 
-    @commands.hybrid_command(name='insert')
-    async def insert(self, ctx, *, flags: insertFlags):
-        sudoku_channel = bot_setup.messageCountChannel
-        my_inserted_sudoku = sudoku_manager.sudokuInsert(flags.group, flags.square, flags.num)
-        await sudoku_channel.send(embed=my_inserted_sudoku)
+
+
         
         
 

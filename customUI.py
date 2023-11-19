@@ -3,6 +3,7 @@ from discord.ui import View, Button, Select, button, select
 from discord.ui.item import Item
 from scraper import wikiScraper
 from discord import ButtonStyle
+from discord import SelectOption
 
 
 # File with custom UI classes, mainly subclassing discord.View
@@ -43,9 +44,9 @@ class MyButtonView(View):
 ##################################################################
 
 class MySelectView(View):
-    def __init__(self, ctx):
+    def __init__(self, channel):
         super().__init__(timeout=25)
-        self.ctx = ctx
+        self.channel = channel
         self.sel_opt = None
         self.summary = None
 
@@ -73,5 +74,15 @@ class MySelectView(View):
 
     async def on_timeout(self):
         if not self.is_finished():
-            await self.ctx.send("You were taking too long sucker! 😝")
+            await self.channel.send("You were taking too long sucker! 😝")
             self.clear_items()
+
+
+####################### FUNCTIONS #########################################
+
+def getSelectOptions(displayOptions: "list[str]"):
+    if len(displayOptions)==0 or displayOptions is None:
+        # TODO: raise exception
+        return None
+    options = [SelectOption(label=option, value=option) for option in displayOptions]
+    return options

@@ -82,7 +82,6 @@ class Sudoku:
             str2 = [line2,line3,line4][(r%self.side==0)+(r%self.base==0)]
             strr = "\n".join([str1,str2])
             final_string += strr+"\n"
-        print (final_string)
         return final_string
 
     def inputNum(self, group, square, num):

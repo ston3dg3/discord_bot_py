@@ -15,7 +15,10 @@ class DebugCog(commands.Cog):
 
     @commands.command()
     async def ping(self, ctx):
-        await ctx.send("pong 👀🧃") 
+        # Send a temporary message to measure the round-trip time
+        message = await ctx.send("Pinging...")
+        # Calculate the round-trip time (latency)
+        await message.edit(content=f"Pong 👀🧃 ({self.bot.latency:.2f} ms)")
 
     @commands.command(name='toggle')
     async def toggle(self, ctx, setting, *args):

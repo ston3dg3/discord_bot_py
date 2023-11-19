@@ -1,7 +1,4 @@
-import discord
 from discord.ext import commands
-
-from embed_manager import ListEmbed
 from customUI import MyButtonView, MySelectView
 import bot_setup
 
@@ -21,7 +18,7 @@ class ViewCog(commands.Cog):
 
     @commands.command()
     async def selection(self, ctx):
-        view = MySelectView(ctx)
+        view = MySelectView(ctx.message.channel)
         await ctx.send(view=view)
 
     # # NON WORKING FUNCTION, MIGHT FIX LATER

@@ -104,23 +104,26 @@ def run():
 
 
     # ++++++++++++++++++ LOADING AND UNLOADING OF COGS ++++++++++++++++++++
-    @commands.is_owner()
-    @bot.command()
-    async def reload(ctx, cog: str):
-        await bot.reload_extension(f"cogs.{cog.lower()}")
+    # @commands.is_owner()
+    # @bot.command()
+    # async def reload(ctx, cog: str):
+    #     await bot.reload_extension(f"cogs.{cog.lower()}")
+    #     await ctx.channel.send(f"extension **{cog.lower()}** reloaded")
     
-    @commands.is_owner()
-    @bot.command()
-    async def unload(ctx, cog: str):
-        await bot.unload_extension(f"cogs.{cog.lower()}")
+    # @commands.is_owner()
+    # @bot.command()
+    # async def unload(ctx, cog: str):
+    #     await bot.unload_extension(f"cogs.{cog.lower()}")
+    #     await ctx.channel.send(f"extension **{cog.lower()}** unloaded")
 
-    @commands.is_owner()
-    @bot.command()
-    async def load(ctx, cog: str):
-        await bot.load_extension(f"cogs.{cog.lower()}")
+    # @commands.is_owner()
+    # @bot.command()
+    # async def load(ctx, cog: str):
+    #     await bot.load_extension(f"cogs.{cog.lower()}")
+    #     await ctx.channel.send(f"extension **{cog.lower()}** loaded")
 
-    # @say.error
-    # async def say_error(ctx, error):
+    # # @say.error
+    # # async def say_error(ctx, error):
     #     if isinstance(error, commands.CommandError):
     #         await ctx.send("Permission denied!!!")
     # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

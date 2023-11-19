@@ -4,8 +4,17 @@ import re
 import time
 from datetime import datetime
 import exceptions
+import random
 
 # TODO: turn utilities into global functions SMH
+
+# generates a random discord hex colour
+def randomColour():
+    int_color = random.randint(0, 0xFFFFFF)
+    hex_color = f"#{int_color:06x}"
+    hex_color_int = int(hex_color)
+    return #ff6699
+
 
 def add_word_to_count( new_word):
     count_word = {

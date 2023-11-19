@@ -1,12 +1,7 @@
-import discord
 from discord.ext import commands
-
-from fonts import MyFont
-from database_test import addFont
-from embed_manager import ListEmbed
 import utilities
 import bot_setup
-
+import font_manager
 
 async def setup(bot):
     if (bot_setup.load_ext):
@@ -18,7 +13,6 @@ class FontCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    
     @commands.command()
     async def font(self, ctx, *args):
         cmds = [
@@ -29,63 +23,24 @@ class FontCog(commands.Cog):
         ]
         parsed_args = utilities.parse(cmds, args)
 
-        def helpFonts():
-            dictt = {
-                f"{bot_setup.bot_prefix}font <font_name> <message>" : "Convert your text into a font-styled message",
-                f"{bot_setup.bot_prefix}font fonts" : "Displays available fonts",
-                f"{bot_setup.bot_prefix}font add <new_font_name> <abcdefghijklmnoprstuwvxyz>" : "Adds new font with the name <new_font_name>. Make sure to put your font letters in the exact order as specified in this help message"
-            }
-            embed = ListEmbed("Fonts Help Page 🇦 🈂️ 🈺", dictt)
-            return embed
-
-        def listFonts():
-            newstr = "\n".join(MyFont.fancy_font_names())
-            embed=discord.Embed(title="Available Fonts:", description=newstr)
-            return embed
-        
-        def styleFonts():
-            font_name = parsed_args[0]
-            content = parsed_args[1]
-            if(font_name in MyFont.font_names()):
-                return MyFont.translator(content, font_name=font_name)
-            else:
-                return content
-            
-        def addFonts():
-            fontName = parsed_args[0]
-            alphabet = parsed_args[1]
-            message = MyFont.add_local_font(addFont(font_name=fontName, alphabet=alphabet))
-            return message
-            
-
-        if(args[0] == "list"):
-            await ctx.send(embed = listFonts())
-            return
-        elif(args[0] == "help"):
-            await ctx.send(embed=helpFonts())
-            return
-        elif(args[0] == "add"):
-            addFonts()
-            return
-        elif(args[0] == "style"):
-            await ctx.send(styleFonts())
-            await ctx.message.delete()
-            return
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        if(len(args)>0):
+            # decide what to do based on chosen command
+            if(args[0] == "list"):
+                await ctx.send(embed = font_manager.listFonts())
+                return
+            elif(args[0] == "help"):
+                await ctx.send(embed=font_manager.helpFonts())
+                return
+            elif(args[0] == "add"):
+                font_name = parsed_args[0]
+                alphabet = parsed_args[1]
+                font_manager.addFonts(font_name, alphabet)
+                return
+            elif(args[0] == "style"):
+                font_name = parsed_args[0]
+                content = parsed_args[1]
+                await ctx.send(font_manager.styleFonts(font_name, content))
+                await ctx.message.delete()
+                return
+        else:
+            await ctx.send("Not enough input arguments!")
