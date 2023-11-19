@@ -2,8 +2,6 @@
 from bs4 import BeautifulSoup
 import requests
 import wikipedia
-from chemicals import CAS_from_any, MW, Tb, Tm
-import wikiChemObj
 from dataMerger import dataMerger
 
 # michiyo_wants_these_chemicals = input("What chemicals u want? Input separated by comma:\n")
@@ -117,38 +115,38 @@ class wikiScraper:
 
 ##################### CHEMICAL - DATA ####################
 
-    def chemicalsQuery(self):
-        #CAS_chemical = search_chemical(chemical)
-        try:
-            CAS_chemical = CAS_from_any(self.query)
+    # def chemicalsQuery(self):
+    #     #CAS_chemical = search_chemical(chemical)
+    #     try:
+    #         CAS_chemical = CAS_from_any(self.query)
             
-            molar_mass = MW(CAS_chemical)
-            boiling_point = Tb(CAS_chemical)
-            if(boiling_point is not None):
-                boiling_point -= 273.15
-            melting_point = Tm(CAS_chemical)
-            if(melting_point is not None):
-                melting_point -= 273.15
-        except ValueError:
-            print(f"Chemical name [{self.query}] not recognized")
+    #         molar_mass = MW(CAS_chemical)
+    #         boiling_point = Tb(CAS_chemical)
+    #         if(boiling_point is not None):
+    #             boiling_point -= 273.15
+    #         melting_point = Tm(CAS_chemical)
+    #         if(melting_point is not None):
+    #             melting_point -= 273.15
+    #     except ValueError:
+    #         print(f"Chemical name [{self.query}] not recognized")
 
-        dictt = {
-            "Molar mass":molar_mass,
-            "Boiling point":boiling_point,
-            "Melting point":melting_point,
-        }
-        self.result_dict = dictt
-        self.generateContentString()
-        return dictt
+    #     dictt = {
+    #         "Molar mass":molar_mass,
+    #         "Boiling point":boiling_point,
+    #         "Melting point":melting_point,
+    #     }
+    #     self.result_dict = dictt
+    #     self.generateContentString()
+    #     return dictt
 
-    @classmethod
-    def chemicalsSearchResults(self, chemicals_list):
-        myList = []
-        for chemical_name in chemicals_list:
-            newScraper = wikiScraper(chemical_name)
-            newScraper.chemicalsQuery()
-            myList.append(newScraper)
-        return myList
+    # @classmethod
+    # def chemicalsSearchResults(self, chemicals_list):
+    #     myList = []
+    #     for chemical_name in chemicals_list:
+    #         newScraper = wikiScraper(chemical_name)
+    #         newScraper.chemicalsQuery()
+    #         myList.append(newScraper)
+    #     return myList
     
 ################## MERGED DATA ###########################
     
@@ -165,7 +163,6 @@ class wikiScraper:
         return myList
 
         
-
 ######################### END OF CLASS ####################################3
 
 # def tryDict(dicto, stringer):

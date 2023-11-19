@@ -2,7 +2,6 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 import wiki_manager
-from typing import List
 
 # here specify the main command as name
 async def setup(bot):
