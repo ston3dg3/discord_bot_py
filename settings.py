@@ -1,5 +1,7 @@
 import envReplacement
 import pathlib
+import logging
+from logging.config import dictConfig
 
 DISCORD_API_SECRET = envReplacement.discrod_api
 WOLFRAM_API_ID = envReplacement.wolfram_api
