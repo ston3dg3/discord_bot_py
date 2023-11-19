@@ -70,9 +70,6 @@ class wikiScraper:
     # extract wanted properties from scanned Table data
         properties_dict = {}
         if data is not None:
-            print("============ wiki scraper table ==========")
-            print(data)
-            print("===========================================")
             try:
                 for row in data:
                     if(len(row) == 2 and row[0] in properties_list):
@@ -86,9 +83,6 @@ class wikiScraper:
         else:
             properties_dict = None
 
-        print("============ wiki scraper DICT ==========")
-        print(properties_dict)
-        print("===========================================")
         return properties_dict
     
     def dict_from_query(self, inquiry_list: list) -> dict:
