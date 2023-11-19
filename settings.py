@@ -6,7 +6,7 @@ import envReplacement
 import pathlib
 import discord
 
-load_dotenv()
+load_dotenv(".env")
 
 useEnv = True
 
