@@ -72,13 +72,12 @@ class wikiScraper:
     # extract wanted properties from scanned Table data
         properties_dict = {}
         if data is not None:
-            print("============ wiki scraper table ==========")
-            print(data)
-            print("===========================================")
+            # print("============ wiki scraper table ==========")
+            # print(data)
+            # print("===========================================")
             try:
                 for row in data:
                     if(len(row) == 2 and row[0] in properties_list):
-                        print(row[0]+"\n")
                         keyy = row[0] if (row[0]!=None) else "unknown"
                         valuee = row[1] if (row[1]!=None) else "😭"
                         properties_dict.update({keyy:valuee})
@@ -88,9 +87,9 @@ class wikiScraper:
         else:
             properties_dict = None
 
-        print("============ wiki scraper DICT ==========")
-        print(properties_dict)
-        print("===========================================")
+        # print("============ wiki scraper DICT ==========")
+        # print(properties_dict)
+        # print("===========================================")
         return properties_dict
     
     def dict_from_query(self, inquiry_list: list) -> dict:
