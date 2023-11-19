@@ -51,8 +51,8 @@ class MyFont:
         name = row[0]
         trans_string = row[1] 
         if(name not in MyFont.font_names()):
-            MyFont(name, trans_string=trans_string)
-            return f"Font {name} has been added"
+            fontt = MyFont(name, trans_string=trans_string)
+            return f"Font {fontt.fancy_font_names()[-1]} has been added"
         else:
             return "Fonts already in the list"
 

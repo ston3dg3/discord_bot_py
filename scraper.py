@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import requests
 import wikipedia
 from chemicals import CAS_from_any, MW, Tb, Tm
-import test_files.wikiChemObj as wikiChemObj
+import wikiChemObj
 from dataMerger import dataMerger
 
 # michiyo_wants_these_chemicals = input("What chemicals u want? Input separated by comma:\n")

@@ -131,3 +131,91 @@
 
 ########################################################################
 
+
+
+
+
+
+    # @commands.group()
+    # async def font(self, ctx):
+    #     if ctx.invoked_subcommand is None:
+    #         await ctx.send(f"Invalid subcommand. Use '{bot_setup.bot_prefix}font help' for available options.")
+
+    # # # LIST FONTS
+    # @font.command()
+    # async def list(self, ctx):
+        
+    #     newstr = "\n".join(MyFont.fancy_font_names())
+    #     embed=discord.Embed(title="Available Fonts:", description=newstr)
+    #     await ctx.send(embed=embed)
+
+
+
+
+
+    # # +++ ADD ++++++++++++++++++++++++++++++++++++++++
+
+    # # STAGE
+    # @font.command(pass_context=True)
+    # async def add(self, ctx):
+    #     if ctx.invoked_subcommand is None:
+    #         await ctx.send(f"Invalid subcommand. Use '{bot_setup.bot_prefix}font help' for available options.")
+
+    # # # STAGE
+    # @add.group(pass_context=True)
+    # async def font_name(self, ctx):
+    #     if ctx.invoked_subcommand is None:
+    #         await ctx.send(f"Invalid subcommand. Use '{bot_setup.bot_prefix}font help' for available options.")
+    #     else:
+    #         self.fontName = ctx
+
+    # # PERFORM ACTUAL ADDING
+    # @font_name.command()
+    # async def font_alphabet(self, ctx: str): 
+    #     alphabet = ctx
+    #     if (len(alphabet)!=len("abcdefghijklmnoprstuwvxyz")):
+    #         await ctx.send(f"Wrong alphabet size. Please see the command {bot_setup.bot_prefix}font help")
+    #     else:
+    #         message = MyFont.add_local_font(addFont(font_name=self.fontName, alphabet=alphabet))
+    #         await ctx.send(message)
+        
+
+
+
+    # # +++ STYLE +++++++++++++++++++++++++++++++++++++++
+    # @font.command()
+    # async def font_style(self, ctx):
+    #     if ctx.invoked_subcommand is None:
+    #         await ctx.send(f"Invalid subcommand. Use '{bot_setup.bot_prefix}font help' for available options.")
+    #     else:
+    #         self.message = ctx
+
+    # # PERFORM ACTUAL FONT STYLE
+    # @font_style.command()
+    # async def text_message(self, ctx: str):
+    #     if(ctx in MyFont.font_names()):
+    #         await ctx.message.delete()
+    #         newMsg = MyFont.translator(self.message, font_name=ctx)
+    #         await ctx.send(newMsg)
+
+
+
+
+    # # DISPLAY HELP MESSAGE
+    # @font.command()
+    # async def help(self, ctx):
+    #     dictt = {
+    #         f"{bot_setup.bot_prefix}font <font_name> <message>" : "Convert your text into a font-styled message",
+    #         f"{bot_setup.bot_prefix}font fonts" : "Displays available fonts",
+    #         f"{bot_setup.bot_prefix}font add <new_font_name> <abcdefghijklmnoprstuwvxyz>" : "Adds new font with the name <new_font_name>. Make sure to put your font letters in the exact order as specified in this help message"
+    #     }
+    #     embed = ListEmbed(ctx, "Fonts Help Page 🇦 🈂️ 🈺", dictt)
+    #     await ctx.send(embed=embed)
+
+
+
+###############################################################
+
+
+
+

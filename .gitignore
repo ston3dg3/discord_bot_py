@@ -2,6 +2,7 @@
 /test_files
 /logs
 envReplacement.py
+/AIDAN_testing
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

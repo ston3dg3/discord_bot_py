@@ -1,11 +1,11 @@
 import sqlite3
-from envReplacement import working_path
+from settings import BASE_DIR
 import exceptions
 
 
 def sqlConn(func):
     def wrapper(*args, **kwargs):
-        con = sqlite3.Connection(working_path+"/example.db")
+        con = sqlite3.Connection(BASE_DIR / "example.db")
         cur = con.cursor()
         result = func(cur, *args, **kwargs)
         con.commit()
@@ -46,6 +46,11 @@ def create_sudoku_table(cur):
 def clear_table(cur):
     # delete the whole table for testing
     cur.execute(""" DELETE FROM saved_mgs """)
+
+@sqlConn
+def deleteSudokus(cur):
+    # delete the whole table for testing
+    cur.execute(""" DELETE FROM saved_sudoku """)
 
 
 @sqlConn
@@ -138,3 +143,4 @@ def fetchSudoku(cur):
 #######################################################################
 
 # deleteNoneTypes()
+# deleteSudokus()

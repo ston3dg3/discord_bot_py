@@ -1,108 +1,21 @@
-# import discord
-# import settings
-# import random
-# import json
-# import utilities
-# import bot_setup
-
-# from discord.ext import commands
-# from API_requests import requestHandler
-# from customUI import MyButtonView, MySelectView
-# from scraper import wikiScraper
 # from fonts import MyFont
-# from embed_manager import ListEmbed, TableEmbed
-# from database_test import fetchData, addFont, updateMessage, fetchSudoku
+# import discord
+# from discord.ext import commands
+# from embed_manager import ListEmbed
+# import utilities
 # from sudoku import Sudoku
 # from ANSI_colours import ANSI
-# from cogs.fontcog import fontCMD
-
-################## GLOBAL VARIABLES ##########################
-
-# logger = settings.logging.getLogger("bot") 
-# token = settings.DISCORD_API_SECRET
-
-# #################################### BOT SETUP ##############################################
-
-# bot = commands.Bot(command_prefix=bot_setup.bot_prefix, description=bot_setup.bot_description, intents=bot_setup.getIntents())
-
-
-# Function that initializes all required elements for the bot
-# def initialize():
-#     from database_test import create_fonts_table, create_message_table, create_sudoku_table, requestAllFonts, fetchSudoku
-#     from fonts import MyFont
-#     from sudoku import Sudoku
-#     import pickle
-#     create_fonts_table()
-#     create_message_table()
-#     create_sudoku_table()
-#     # fill local sudoku list
-#     [Sudoku.addBoard(pickle.loads(row[1])) for row in fetchSudoku()]
-#     # fill local font list
-#     [MyFont.add_local_font(row) for row in requestAllFonts()]
-
-# @bot.event
-# async def setup_hook():
-#     # Perform actions after the bot is logged in
-#     initialize()
-#     def fetchChannel(channelID): return bot.get_channel(channelID) or bot.fetch_channel(channelID)
-#     global messageCountChannel
-#     global savedMessageChannel
-#     messageCountChannel = await fetchChannel(bot_setup.messageCountChannelID)
-#     savedMessageChannel = await fetchChannel(bot_setup.savedMessageChannelID)
-    
-
-
-
+# import bot_setup
+# from scraper import wikiScraper
+# import json
+# from customUI import MyButtonView, MySelectView
+# import settings
 
 # @bot.event
 # async def on_ready():
-#     logger.info(f"Logged on as User: {bot.user} (ID: {bot.user.id})")
-#     await bot.tree.sync()
-
-
-######################### BOT COMMANDS AND FUNCTIONS ##################################################
-
-# @bot.hybrid_command(name='ping')
-# async def ping(ctx):
-#     await ctx.send("pong 👀🧃 ") 
-
-
-# @bot.command(name='button')
-# async def button(ctx):
-#     view = MyButtonView(ctx)
-#     await ctx.send('Hi', view=view)
-#     await view.wait()
-
-# # NON WORKING FUNCTION, MIGHT FIX LATER
-# @bot.command(name='selection')
-# async def selection(ctx):
-#     view = MySelectView(ctx)
-#     await ctx.send(view=view)
-
-
-# @bot.command(name='viewSaved')
-# async def viewSaved(ctx):
-#     count_channel = messageCountChannel
-#     rows = fetchData()
-#     embed = discord.Embed(title="Saved Messages", color = 0xfcba03)
-
-#     if rows:
-#         for row in rows:
-#             embed.add_field(name=row[0], value=f'Count: {row[1]}', inline=False)
-#     else:
-#         embed.add_field(name="No data", value="No message counts found.", inline=False)
-
-#     await count_channel.send(embed=embed)
-
-# class fontFlags(commands.FlagConverter):
-#     option: str = commands.flag(description="Option: [help] <font_name> [fonts] [add]")
-#     font_option: str = commands.flag(description="Give your new font a name")
-#     message: str = commands.flag(description="The message you want to appear in font style")
-
-    
-
-
-
+#     for cmd_file in settings.CMDS_DIR.glob("*.py"):
+#         if cmd_file.name != "__init__.py":
+#             await bot.load_extension(f"cmds.{cmd_file.name[:-3]}")
 
 
 # @bot.command(name='font')
@@ -263,14 +176,14 @@
 #     view.clear_items()
 
 
-# DEPRECATED TODO: Exorcise command
-# @bot.command(name='chemicals')
-# async def chemicals(ctx, *args):
-#     chem_list_to_display = wikiScraper.chemicalsSearchResults(chemicals_list=args)
-#     usr = ctx.message.author
-#     for chemical in chem_list_to_display:
-#         embed=discord.Embed(title=chemical.query, description=chemical.content, color=usr.accent_color)
-#         await ctx.send(embed=embed)
+# # DEPRECIATED TODO: Exorcise command
+# # @bot.command(name='chemicals')
+# # async def chemicals(ctx, *args):
+# #     chem_list_to_display = wikiScraper.chemicalsSearchResults(chemicals_list=args)
+# #     usr = ctx.message.author
+# #     for chemical in chem_list_to_display:
+# #         embed=discord.Embed(title=chemical.query, description=chemical.content, color=usr.accent_color)
+# #         await ctx.send(embed=embed)
 
 
 # @bot.hybrid_command(name='chem')
@@ -287,24 +200,24 @@
 #     a=3
 #     # TODO: toggle functon to change bot settings on/off
     
-# TODO: Needs to work without chemicals library
-# @bot.command(name='chemData')   
-# async def chemData(ctx, *args):
-#     chem_list_to_display = wikiScraper.combinedSearchResults(
-#         chemicals_list=args, interested_list=bot_setup.chem_attributes_list
-#         )
-#     usr = ctx.message.author
-#     field_embed = True
+# # TODO: Needs to work without chemicals library
+# # @bot.command(name='chemData')   
+# # async def chemData(ctx, *args):
+# #     chem_list_to_display = wikiScraper.combinedSearchResults(
+# #         chemicals_list=args, interested_list=bot_setup.chem_attributes_list
+# #         )
+# #     usr = ctx.message.author
+# #     field_embed = True
 
-#     for chemical in chem_list_to_display:
-#         if(field_embed):
-#             dictt = chemical.result_dict
-#             embed=discord.Embed(title=chemical.query, description="", color=usr.accent_color, url=chemical.url)
-#             for key, value in dictt.items():
-#                 embed.add_field(name=key, value=value, inline=False)
-#         else:
-#             embed=discord.Embed(title=chemical.query, description=chemical.content, color=usr.accent_color, url=chemical.url)
-#         await ctx.send(embed=embed)
+# #     for chemical in chem_list_to_display:
+# #         if(field_embed):
+# #             dictt = chemical.result_dict
+# #             embed=discord.Embed(title=chemical.query, description="", color=usr.accent_color, url=chemical.url)
+# #             for key, value in dictt.items():
+# #                 embed.add_field(name=key, value=value, inline=False)
+# #         else:
+# #             embed=discord.Embed(title=chemical.query, description=chemical.content, color=usr.accent_color, url=chemical.url)
+# #         await ctx.send(embed=embed)
 
 # class wolframFlags(commands.FlagConverter):
 #     search_term: str = commands.flag(description="Insert a question for the Wolfram engine")
@@ -340,29 +253,3 @@
 #         mgs.append(message)
 #     for message in mgs:
 #         await message.delete()
-
-# @bot.event
-# async def on_message(message):
-#     if message.author!=bot.user:
-#         found_word = utilities.count_word(message, bot_setup.count_list)
-#         if not found_word is None: updateMessage(found_word)
-#         if utilities.swear_word(message):
-#             print("we got a swear word!!")
-#             # TODO: swear words response
-#         elif message.content.startswith(bot_setup.bot_prefix + "tortle"):
-#             # PARSE COMMANDS
-#             await message.delete()
-#             msg_list = message.content.split()[1:]
-#             random.shuffle(msg_list)
-#             msg = ' '.join(msg_list)
-#             await message.channel.send(msg)
-#         else:
-#             await bot.process_commands(message)
-#     else:
-#         await bot.process_commands(message)
-
-################# RUNNING THE BOT #####################################
-
-# bot.run(token, root_logger=True)
-
-######################################################################

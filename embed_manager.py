@@ -6,16 +6,18 @@ import random
 random_colour = f"#{random.randrange(0x1000000):06x}"
 
 
-def ListEmbed(ctx, title: str, value_desc_dict: dict, author_info = False, url = None, color=0xc592e5) -> Embed:
+def ListEmbed(title: str, value_desc_dict: dict, author_info = False, url = None, color=0xc592e5, ctx=None) -> Embed:
     embed = Embed(title=title, description="", color=color)
-    usr = ctx.message.author
+    if author_info:
+        usr = ctx.message.author
+    else:
+        usr = None
 
     if value_desc_dict is None:
         embed.add_field(name="No Entries Found", value="N/D", inline=False)
         return embed
     
     for key, value in value_desc_dict.items():
-        print(key+ " " + value)
         embed.add_field(name=key, value=value, inline=False)
 
     if author_info:
