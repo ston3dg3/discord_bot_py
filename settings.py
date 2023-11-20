@@ -2,10 +2,11 @@ import envReplacement
 import pathlib
 import logging
 from logging.config import dictConfig
+from discord import Object
 
 DISCORD_API_SECRET = envReplacement.discrod_api
 WOLFRAM_API_ID = envReplacement.wolfram_api
-GUILD_ID = envReplacement.guild_id_ikea
+GUILD_ID = Object(id=int(envReplacement.guild_id_ikea))
 BASE_DIR = pathlib.Path(__file__).parent
 CMDS_DIR = BASE_DIR / "cmds"
 COGS_DIR = BASE_DIR / "cogs"
