@@ -17,7 +17,7 @@ if(useEnv):
 else:
     DISCORD_API_SECRET = envReplacement.discrod_api
     WOLFRAM_API_ID = envReplacement.wolfram_api
-    GUILD_ID = envReplacement.guild_id_ikea
+    GUILD_ID = discord.Object(id=int(envReplacement.guild_id_ikea))
 
 BASE_DIR = pathlib.Path(__file__).parent
 CMDS_DIR = BASE_DIR / "cmds"
