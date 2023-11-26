@@ -31,16 +31,21 @@ class FontCog(commands.Cog):
             elif(args[0] == "help"):
                 await ctx.send(embed=font_manager.helpFonts())
                 return
+            # EXCEPTION: returns a string, not an Embed
             elif(args[0] == "add"):
                 font_name = parsed_args[0]
                 alphabet = parsed_args[1]
-                font_manager.addFonts(font_name, alphabet)
+                message_str = font_manager.addFonts(font_name, alphabet)
+                await ctx.send(message_str)
                 return
+            # EXCEPTION: returns a string, not an Embed
             elif(args[0] == "style"):
                 font_name = parsed_args[0]
                 content = parsed_args[1]
-                await ctx.send(font_manager.styleFonts(font_name, content))
+                message_str = font_manager.styleFonts(font_name, content)
+                await ctx.send(message_str)
                 await ctx.message.delete()
                 return
         else:
-            await ctx.send("Not enough input arguments!")
+            error_str = "Not enough input arguments!"
+            await ctx.send(error_str)

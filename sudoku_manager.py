@@ -1,4 +1,4 @@
-from embed_manager import ListEmbed, EmptyEmbed
+from embed_manager import ListEmbed, EmptyEmbed, ErrorEmbed
 from sudoku import Sudoku
 from ANSI_colours import ANSI
 import utilities
@@ -10,17 +10,17 @@ def sudokuEmbed(sdk: Sudoku):
     embed= EmptyEmbed(title=f"Sudoku size: {sdk.side}x{sdk.side} Difficulty: {sdk.difficulty}", description=newstr, color=0x42f56f)
     return embed
 
-async def sudokuCreate(sdk_size: int, sdk_difficulty: int, channel):
+def sudokuCreate(sdk_size: int, sdk_difficulty: int):
     size = utilities.clamp(sdk_size, 2, 10)
     difficulty = utilities.clamp(sdk_difficulty, 10, 80)
     sdk = Sudoku(size, difficulty)
-    await channel.send(embed=sudokuEmbed(sdk))
+    return sudokuEmbed(sdk)
 
-async def sudokuList(channel):
+def sudokuList():
     # generate dict for ListEmbed:
     dicto = {}
     if len(Sudoku.sudoku_list) == 0:
-        await channel.send("There are no saved sudoku baords :(")
+        return ErrorEmbed("There are no saved Sudoku boards :(")
     i = 1
     for sdk in Sudoku.sudoku_list:
         if sdk:
@@ -32,33 +32,32 @@ async def sudokuList(channel):
             # SUDOKU is None
             pass
     if len(dicto) != 0:
-        await channel.send(embed=ListEmbed("Saved Sudoku Boards", dicto, color = 0xffd152))
+        return ListEmbed("Saved Sudoku Boards", dicto, color = 0xffd152)
 
         
 # outputs noError: embed, Error: None
-async def sudokuInsert(group: int, square: int, num: int, channel):
+def sudokuInsert(group: int, square: int, num: int):
     try:
         sdk = Sudoku.sudoku_list[-1] 
         sdk.inputNum(group,square,num)
-        await channel.send(embed=sudokuEmbed(sdk))
+        return sudokuEmbed(sdk)
     except IndexError as err:
-        await channel.send("Index Error!")
+        return ErrorEmbed(f"Index Error:\n*{err}*\nSelect an existing Sudoku board")
     
-async def sudokuLoad(choice_index, channel):
+def sudokuLoad(choice_index):
     # convert to programming counting
     choice_index = choice_index - 1
     choice_index = utilities.clamp(choice_index, 0, len(Sudoku.sudoku_list))
     sdk = Sudoku.sudoku_list[choice_index]
-    await channel.send(embed=sudokuEmbed(sdk))
+    return sudokuEmbed(sdk)
 
-async def sudokuSave(channel):
+def sudokuSave():
     sdk = Sudoku.sudoku_list[-1]
     sdk.store()
     strr = f"Successfully saved Sudoku with ID: <{sdk.key}>\nView it with: /sudoku list"
-    embed=EmptyEmbed(title="Sudoku Saved", description=strr, color=0x42f56f)
-    await channel.send(embed=embed)
+    return EmptyEmbed(title="Sudoku Saved", description=strr, color=0x42f56f) 
     
-async def sudokuHelp(channel):
+def sudokuHelp():
     dictt = {
         "/sudoku help" : "Displays this help message",
         "/sudoku list" : "Lists all saved Sudoku boards and their indices",
@@ -67,5 +66,4 @@ async def sudokuHelp(channel):
         "/sudoku save": "Saves the current Sudoku board for later",
         "/sudoku insert [group] [square] [number]" : "inserts the number at specified position"
         }
-    embed=ListEmbed(title="Sudoku Help Page", value_desc_dict=dictt)
-    await channel.send(embed=embed)
+    return ListEmbed(title="Sudoku Help Page", value_desc_dict=dictt)

@@ -5,7 +5,7 @@ import utilities
 from database_test import addFont
 
 # generate a dictionary for command help messages and sends an embed with this info
-def helpFonts(channel):
+def helpFonts():
     dictt = {
         f"{bot_setup.bot_prefix}font <font_name> <message>" : "Convert your text into a font-styled message",
         f"{bot_setup.bot_prefix}font fonts" : "Displays available fonts",
@@ -25,7 +25,7 @@ def styleFonts(font_name, content):
     if(font_name in MyFont.font_names()):
         return MyFont.translator(content, font_name=font_name)
     else:
-        return content
+        return 'No such font exists you dummy 🫠'
     
 # adds the font of the pasted alphabet with the specified font_name
 def addFonts(font_name, alphabet):

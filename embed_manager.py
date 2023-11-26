@@ -27,11 +27,14 @@ def ListEmbed(title: str, value_desc_dict: dict, author_info = False, url = None
     return embed
 
 # returns an empty embed so that modules do not require discord.py
-def EmptyEmbed(title, description, color=0xff6699, url=None):
+def EmptyEmbed(title: str, description: str, color=0xff6699, url=None) -> Embed:
     return Embed(title=title, description=description, color=color, url=url)
 
 def addErrorMessage(embed: Embed, error_message = "Requested data could not be found"):
     return embed.add_field(name = error_message, value = "")
+
+def ErrorEmbed(error: str) -> Embed:
+    return Embed(title="*ERROR*", description=error, color=0xff0000) 
 
 
     
