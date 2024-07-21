@@ -13,11 +13,11 @@ useEnv = True
 if(useEnv):
     DISCORD_API_SECRET = os.getenv("DISCORD_API_TOKEN")
     WOLFRAM_API_ID = os.getenv("WOLFRAM_API_ID")
-    GUILD_ID = discord.Object(id=int(os.getenv("GUILD_ID_IKEA")))
+    GUILD_ID = discord.Object(id=int(os.getenv("GUILD_ID_BEE")))
 else:
     DISCORD_API_SECRET = envReplacement.discrod_api
     WOLFRAM_API_ID = envReplacement.wolfram_api
-    GUILD_ID = discord.Object(id=int(envReplacement.guild_id_ikea))
+    GUILD_ID = discord.Object(id=int(envReplacement.guild_id_bee))
 
 BASE_DIR = pathlib.Path(__file__).parent
 CMDS_DIR = BASE_DIR / "cmds"

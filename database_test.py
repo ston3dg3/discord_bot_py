@@ -144,3 +144,4 @@ def fetchSudoku(cur):
 
 # deleteNoneTypes()
 # deleteSudokus()
+# clear_table()

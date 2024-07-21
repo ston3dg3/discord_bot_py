@@ -3,7 +3,7 @@ from discord import app_commands
 
 # here specify the main command as name
 async def setup(bot):
-    grp = MyGroup(name="puffer", description="says priinces puffer")
+    grp = MyGroup(name="test", description="tests")
     bot.tree.add_command(grp)
 
 
@@ -11,4 +11,4 @@ class MyGroup(app_commands.Group):
 
     @app_commands.command()
     async def print(self, interaction: discord.Interaction):
-        await interaction.response.send_message("princcess puffer")
+        await interaction.response.send_message("tested")
